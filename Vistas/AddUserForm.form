@@ -196,14 +196,8 @@
         </Component>
         <Component class="javax.swing.JComboBox" name="cbTipoDocumento">
           <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="5">
-                <StringItem index="0" value="C&#xe9;dula de Ciudadan&#xed;a"/>
-                <StringItem index="1" value="C&#xe9;dula de Exranjer&#xed;a"/>
-                <StringItem index="2" value="Libreta Militar"/>
-                <StringItem index="3" value="Pasaporte"/>
-                <StringItem index="4" value="Otro"/>
-              </StringArray>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="modeloEnumTipoDocumento" type="code"/>
             </Property>
           </Properties>
           <AuxValues>

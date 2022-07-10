@@ -9,8 +9,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import modelo.Conexion;
+import modelo.TipoDocumento;
 
 /**
  *
@@ -18,17 +21,21 @@ import modelo.Conexion;
  */
 public class AddUserForm extends javax.swing.JDialog {
 //Instancia de la clase Conexion
-
+    
     Conexion conexion = new Conexion();
     Connection connection;
     //Libreria statement permite ejecutar los query  SQL
     Statement st;
     ResultSet rs;
-
+    //Creamos una variable de tipo comboboxmodel para modificar las opciones de la lista desplegable de tipo documento
+    ComboBoxModel modeloEnumTipoDocumento;
+    
     //Creamos una instancia de la tabla de la interfaz
     public AddUserForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        modeloEnumTipoDocumento = new DefaultComboBoxModel(TipoDocumento.values());
         initComponents();
+        
     }
 
     /**
@@ -74,7 +81,7 @@ public class AddUserForm extends javax.swing.JDialog {
 
         jLabel5.setText("Tipo de Documento");
 
-        cbTipoDocumento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cédula de Ciudadanía", "Cédula de Exranjería", "Libreta Militar", "Pasaporte", "Otro" }));
+        cbTipoDocumento.setModel(modeloEnumTipoDocumento);
 
         txtApellidos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -213,7 +220,8 @@ public class AddUserForm extends javax.swing.JDialog {
         String nombre = txtNombre.getText();
         String apellidos = txtApellidos.getText();
         //Array:CC-CE-Libreta-Pasaporte-Otro (Tipo STRING)
-        String tipoDocumento = (String) cbTipoDocumento.getSelectedItem();
+        int tipoDocumento = cbTipoDocumento.getSelectedIndex();
+        String tipoDocumentoN = (String) cbTipoDocumento.getSelectedItem();
         String documento = txtDocumento.getText();
         String email = txtMail.getText();
         //Validar que los campos no esten vacios
