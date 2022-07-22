@@ -13,7 +13,7 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import modelo.Conexion;
-import modelo.TipoDocumento;
+import controlador.EnumTipoDocumento;
 
 /**
  *
@@ -33,7 +33,7 @@ public class AddUserForm extends javax.swing.JDialog {
     //Creamos una instancia de la tabla de la interfaz
     public AddUserForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        modeloEnumTipoDocumento = new DefaultComboBoxModel(TipoDocumento.values());
+        modeloEnumTipoDocumento = new DefaultComboBoxModel(EnumTipoDocumento.values());
         initComponents();
         
     }
@@ -221,15 +221,30 @@ public class AddUserForm extends javax.swing.JDialog {
         String apellidos = txtApellidos.getText();
         //Array:CC-CE-Libreta-Pasaporte-Otro (Tipo STRING)
         int tipoDocumento = cbTipoDocumento.getSelectedIndex();
-        String tipoDocumentoN = (String) cbTipoDocumento.getSelectedItem();
         String documento = txtDocumento.getText();
         String email = txtMail.getText();
+        String tiDocumentoString = "";
+        if(tipoDocumento==0)
+            tiDocumentoString = "Cedula de Ciudadania";
+        else if (tipoDocumento==1)
+            tiDocumentoString = "Cedula de Extranjeria";
+        else if (tipoDocumento==2)
+            tiDocumentoString = "Libreta Militar";
+        else if (tipoDocumento==3)
+            tiDocumentoString = "Pasaporte";
+        else 
+            tiDocumentoString = "Otro";
+        
+        //VAlidamos que este capturando los valores
+        System.out.println("nombre: "+nombre+" "+apellidos+" Dcoumento "+tiDocumentoString+" "+documento+" correo: "+email );
+        
         //Validar que los campos no esten vacios
         if (nombre.isEmpty() || apellidos.isEmpty() || documento.isEmpty() || email.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Faltan campos por diligenciar", "Nuevo empleado", JOptionPane.WARNING_MESSAGE);
         } else {
-            String queryCrearEmpleado = "INSERT INTO `empleados`(`nombreEmp`, `apellidosEmp`, `tipoDocumento`, `documento`, `correoElectronico`) VALUES ('" + nombre
-                    + "','" + apellidos + "','" + tipoDocumento + "','" + documento + "','" + email + "')";
+            
+            String queryCrearEmpleado = "INSERT INTO `empleado`(`nombreEmp`, `apellidosEmp`, `tipoDocumento`, `documento`, `correoElectronico`) VALUES ('" + nombre
+                    + "','" + apellidos + "','" + tiDocumentoString + "','" + documento + "','" + email + "')";
             JOptionPane.showMessageDialog(this, "Registro exitoso", "Nuevo Empleado", JOptionPane.INFORMATION_MESSAGE);
             try {
                 connection = conexion.getConnection();

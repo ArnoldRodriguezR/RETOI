@@ -37,8 +37,8 @@ public class ShowUserForm extends javax.swing.JDialog {
 
     public void actualizarEmpleado() {
         //Consultamos el valor que tiene el textfield y se asigna a una variable
-        //int idEmp = Integer.parseInt(txtId.getText().toString());
-        String idEmp = txtId.getText();
+        int idEmp = Integer.parseInt(txtId.getText());
+        //String idEmp = txtId.getText();
         String nombre = txtNombre.getText();
         String apellido = txtApellido.getText();
         String correo = txtCorreo.getText();
@@ -50,7 +50,7 @@ public class ShowUserForm extends javax.swing.JDialog {
         } else if (correo.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Se requiere el correo del empleado", " ", JOptionPane.WARNING_MESSAGE);
         } else {
-            String query = "UPDATE `empleados` SET `nombreEmp`='" + nombre + "',`apellidosEmp`='" + apellido + "',`correoElectronico`='" + correo + "' WHERE `idEmp` = " + idEmp + ";";
+            String query = "UPDATE `empleado SET `nombreEmp`='" + nombre + "',`apellidosEmp`='" + apellido + "',`correoElectronico`='" + correo + "' WHERE `idEmp` = " + idEmp + ";";
             System.out.println(query);
             try {
                 connection = conexion.getConnection();
@@ -68,7 +68,7 @@ public class ShowUserForm extends javax.swing.JDialog {
         //Consultamos ID del empleado
         String idEmp = txtId.getText();
         //Validar si el usuari no ha seleccionado un empleado
-        String query = "DELETE FROM `empleados` WHERE idEmp = " + idEmp + ";";
+        String query = "DELETE FROM `empleado` WHERE idEmp = " + idEmp + ";";
         System.out.println(query);
         try{
             connection = conexion.getConnection();
@@ -245,7 +245,7 @@ public class ShowUserForm extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
+        this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
