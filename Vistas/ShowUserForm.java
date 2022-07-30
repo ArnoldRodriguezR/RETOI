@@ -5,8 +5,8 @@
  */
 package Vistas;
 
-import com.mysql.cj.protocol.Resultset;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
@@ -17,7 +17,7 @@ public class ShowUserForm extends javax.swing.JDialog {
     Conexion conexion = new Conexion();
     Connection connection;
     Statement st;
-    Resultset rs;
+    ResultSet rs;
 
     public ShowUserForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -25,60 +25,81 @@ public class ShowUserForm extends javax.swing.JDialog {
         this.setLocationRelativeTo(parent);
     }
 
-    public void recibeDatos(int IdEmp, String nombre, String apellido, String tipoDoc, String documento, String correo) {
-        System.out.println("IdEmp " + IdEmp + "" + " Nombre " + nombre + " " + apellido + " tipo docuemnto " + tipoDoc + " documento " + documento + " correo" + correo);
-        txtId.setText(" " + IdEmp);
+    public void recibeDatos(String nombre, String apellido, String tipoDoc, String documento, String correo, String sucursal) {
+        System.out.println(" Nombre: " + nombre + " " + apellido + " tipo docuemnto " + tipoDoc + " documento " + documento + " correo" + correo);
+
         txtNombre.setText(nombre);
         txtApellido.setText(apellido);
         txtTipoDocumento.setText(tipoDoc);
         txtDocumento.setText(documento);
         txtCorreo.setText(correo);
+        txtSucursal.setText(sucursal);
     }
 
     public void actualizarEmpleado() {
-        //Consultamos el valor que tiene el textfield y se asigna a una variable
-        int idEmp = Integer.parseInt(txtId.getText());
-        //String idEmp = txtId.getText();
-        String nombre = txtNombre.getText();
-        String apellido = txtApellido.getText();
-        String correo = txtCorreo.getText();
-        //CAmpos editables nombres apellidos y correo
-        if (nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Se requiere el nombre del empleado", " ", JOptionPane.WARNING_MESSAGE);
-        } else if (apellido.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Se requiere los apellidos del empleado", " ", JOptionPane.WARNING_MESSAGE);
-        } else if (correo.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Se requiere el correo del empleado", " ", JOptionPane.WARNING_MESSAGE);
-        } else {
-            String query = "UPDATE `empleado SET `nombreEmp`='" + nombre + "',`apellidosEmp`='" + apellido + "',`correoElectronico`='" + correo + "' WHERE `idEmp` = " + idEmp + ";";
-            System.out.println(query);
-            try {
-                connection = conexion.getConnection();
-                st = connection.createStatement();
-                st.executeUpdate(query);
-                JOptionPane.showMessageDialog(this, "El usuario se actualizó correctamente");
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(this, "no se actualizo el empleado", " ", JOptionPane.ERROR_MESSAGE);
+        String documento = txtDocumento.getText();
+        String queryIdEmpleado = "SELECT idEmp FROM empleado WHERE documento = '" + documento + "';";
+        try {
+            connection = conexion.getConnection();
+            st = connection.createStatement();
+            rs = st.executeQuery(queryIdEmpleado);
+            while (rs.next()) {
+                int idEmpleado = rs.getInt("idEmp");
+                String nombre = txtNombre.getText();
+                String apellido = txtApellido.getText();
+                String correo = txtCorreo.getText();
+
+                if (nombre.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Se requiere el nombre del empleado", " ", JOptionPane.WARNING_MESSAGE);
+                } else if (apellido.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Se requiere los apellidos del empleado", " ", JOptionPane.WARNING_MESSAGE);
+                } else if (correo.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Se requiere el correo del empleado", " ", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    String query = "UPDATE empleado SET nombreEmp= '" + nombre + "' , apellidos= '" + apellido + "', correo= '" + correo + "' WHERE idEmp= " + idEmpleado + ";";
+                    try {
+                        connection = conexion.getConnection();
+                        st = connection.createStatement();
+                        st.executeUpdate(query);
+                        JOptionPane.showMessageDialog(this, "El usuario se actualizó correctamente");
+                    } catch (SQLException e) {
+                        JOptionPane.showMessageDialog(this, "no se actualizo el empleado", " ", JOptionPane.ERROR_MESSAGE);
+                    }
+                    this.dispose();
+                }
+
             }
-            this.dispose();
+
+        } catch (SQLException e) {
+            System.out.println(e);
         }
     }
 
     public void EliminarEmpleado() {
         //Consultamos ID del empleado
-        String idEmp = txtId.getText();
-        //Validar si el usuari no ha seleccionado un empleado
-        String query = "DELETE FROM `empleado` WHERE idEmp = " + idEmp + ";";
-        System.out.println(query);
-        try{
+        String documento = txtDocumento.getText();
+        String queryIdEmpleado = "SELECT idEmp from empleado WHERE documento = '" + documento + "';";
+
+        try {
             connection = conexion.getConnection();
             st = connection.createStatement();
-            st.executeUpdate(query);
-            JOptionPane.showMessageDialog(this, "El usuario ha sido eliminado");
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(this, "No se pudo eliminar el empleado","",JOptionPane.ERROR_MESSAGE);
+            rs = st.executeQuery(queryIdEmpleado);
+            while (rs.next()) {
+                int idEmpleado = rs.getInt("idEmp");
+                String queryEliminar = "DELETE FROM empleado WHERE documento = '" + documento + "'";
+                try {
+                    st.executeUpdate(queryEliminar);
+                    JOptionPane.showMessageDialog(this, "El usuario ha sido eliminado");
+                    this.dispose();
+                } catch (SQLException e) {
+                    JOptionPane.showMessageDialog(this, "No se pudo eliminar el empleado", "", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e);
         }
-        this.dispose();
+
     }
 
     @SuppressWarnings("unchecked")
@@ -88,7 +109,7 @@ public class ShowUserForm extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        txtId = new javax.swing.JTextField();
+        txtSucursal = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
@@ -109,9 +130,9 @@ public class ShowUserForm extends javax.swing.JDialog {
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/logo.png"))); // NOI18N
 
-        jLabel2.setText("ID");
+        jLabel2.setText("Sucursal");
 
-        txtId.setEditable(false);
+        txtSucursal.setEditable(false);
 
         jLabel3.setText("Nombre(s)");
 
@@ -175,11 +196,11 @@ public class ShowUserForm extends javax.swing.JDialog {
                             .addComponent(txtApellido)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
                                     .addComponent(txtCorreo)
                                     .addComponent(txtTipoDocumento)
-                                    .addComponent(txtDocumento))
+                                    .addComponent(txtDocumento)
+                                    .addComponent(txtSucursal))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(31, 31, 31)
@@ -195,7 +216,7 @@ public class ShowUserForm extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -313,8 +334,8 @@ public class ShowUserForm extends javax.swing.JDialog {
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtCorreo;
     private javax.swing.JTextField txtDocumento;
-    private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtSucursal;
     private javax.swing.JTextField txtTipoDocumento;
     // End of variables declaration//GEN-END:variables
 }

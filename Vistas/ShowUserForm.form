@@ -73,11 +73,11 @@
                               <Component id="txtApellido" alignment="0" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="txtId" alignment="0" min="-2" pref="32" max="-2" attributes="0"/>
                                       <Component id="txtNombre" pref="187" max="32767" attributes="0"/>
                                       <Component id="txtCorreo" alignment="0" max="32767" attributes="0"/>
                                       <Component id="txtTipoDocumento" alignment="0" max="32767" attributes="0"/>
                                       <Component id="txtDocumento" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="txtSucursal" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
@@ -101,7 +101,7 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtId" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtSucursal" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -149,10 +149,10 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
-            <Property name="text" type="java.lang.String" value="ID"/>
+            <Property name="text" type="java.lang.String" value="Sucursal"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtId">
+        <Component class="javax.swing.JTextField" name="txtSucursal">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
           </Properties>
